@@ -1,0 +1,102 @@
+\documentclass[
+11pt,%
+tightenlines,%
+twoside,%
+onecolumn,%
+nofloats,%
+nobibnotes,%
+nofootinbib,%
+superscriptaddress,%
+noshowpacs,%
+centertags]%
+{revtex4}
+\usepackage{ljm}
+\usepackage{listings}
+\usepackage{amsmath}
+
+\lstset{
+language=C++,
+basewidth=0.5em,
+xleftmargin=45pt,
+xrightmargin=45pt,
+basicstyle=\small\ttfamily,
+keywordstyle=\bfseries\underbar,
+numbers=left,
+numberstyle=\tiny,
+stepnumber=1,
+numbersep=10pt,
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+frame=trBL,
+tabsize=2,
+captionpos=t,
+breaklines=true,
+breakatwhitespace=false,
+escapeinside={\%*}{*)}
+}
+
+\begin{document}
+
+\titlerunning{solving nonlinear equations}
+\authorrunning{Bagrov, Rybakov}
+
+\title{Selection of a Method for Solving Nonlinear Equations in Shallow-Water Icing Model Implementation}
+
+\author{\firstname{A.~D.}~\surname{Bagrov}}
+\email[E-mail: ]{andrey.bagrov@yandex.ru}
+\affiliation{Joint Supercomputer Center of the Russian Academy of Sciences -- branch of Scientific Research Institute of System Analysis of the Russian Academy of Sciences, Leninsky prospect 32a, Moscow, 119334, Russia}
+
+\author{\firstname{A.~A.}~\surname{Rybakov}}
+\email[E-mail: ]{rybakov.aax@gmail.com}
+\affiliation{Joint Supercomputer Center of the Russian Academy of Sciences -- branch of Scientific Research Institute of System Analysis of the Russian Academy of Sciences, Leninsky prospect 32a, Moscow, 119334, Russia}
+
+\firstcollaboration{(Submitted by TODO)} % Add if you know submitter.
+%\lastcollaboration{ }
+
+\received{TODO}
+
+\begin{abstract}
+TODO
+\end{abstract}
+
+\subclass{65H05, 65Y20} % Enter 2010 Mathematics Subject Classification.
+
+\keywords{nonlinear equations, shallow-water icing model, метод бисекций, TODO}
+
+\maketitle
+
+\section{Introduction}
+
+TODO
+
+\section{Methods of solving nonlinear equations}
+
+TODO 
+
+\section{Features of the equations being solved}
+
+TODO
+
+\section{Numerical experiments}
+
+TODO
+
+\section{Conclusion}
+
+TODO
+
+\begin{acknowledgments}
+The work has been done at the JSCC RAS as part of the state assignment for the topic 0580-2021-0016.
+The supercomputer MVS-10P OP, located at the JSCC RAS, was used during the research.
+\end{acknowledgments}
+
+\begin{thebibliography}{99}
+
+\bibitem{Bourgault}
+\refitem{article}
+Y. Bourgault, H. Beaugendre, W. G. Habashi, {\it ``Development of a Shallow-Water Icing Model in FENSAP-ICE''}, Journal of Aircraft, Vol. 37, No. 4, 640--646 (2000).
+
+\end{thebibliography}
+
+\end{document}
