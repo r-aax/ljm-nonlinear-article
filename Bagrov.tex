@@ -151,7 +151,78 @@ h_f \tilde{T} \ge 0\\
 
 \section{Methods of solving nonlinear equations}
 
-TODO - на все методы нужна одна картинка, иллюстрирующая его и описание - один абзац, одна формула.
+\subsection{Метод деления пополам (метод бисекции)}
+Если известно, что на интервале $\ (a, b)$ функция $\ f(x)$ имеет корень, для нахождения корня может быть применен метод деления пополам (метод бисекции). Его сущность заключается в следующем наборе шагов:
+\begin{itemize}
+\item Задать точность нахождения корня - $\epsilon$.
+\item Разделить отрезок (a, b) пополам, получить два отрезка.
+\item Выбрать из двух получившихся в первом шаге отрезков отрезок, на концах которого выполняется условие $\ sign(f(a)) != sign(f(b))$.
+\item Если длина интервала превышает $\epsilon$, перейти к п.2. В противном случае корень находится в середине полученного интервала.
+\end{itemize}
+	
+Для достижения заданной точности $\epsilon$ необходимо провести $\log_2\frac{\epsilon_0}{\epsilon}$  операций, где $\epsilon_0$ – длина начального интервала $\ (a, b)$, на котором находится корень; $\ (a, b)$ - требуемая точность. Метод бисекции гарантированно найдет корень, если он существует. Если корней несколько, метод найдет один из корней.
+
+\begin{figure}[h]
+\setcaptionmargin{5mm}
+\onelinecaptionstrue
+\includegraphics[width=0.5\textwidth]{pics/half_divide.pdf}
+\captionstyle{normal}\caption{Метод деления пополам (метод бисекции)}\label{fig:dq_rime_wet}
+\end{figure}
+
+\subsection{Метод хорд}
+Метод хорд заключается в представлении функции $f(x)$ на отрезке $(a,b)$ хордой, соединяющей концы интервала $(a,b)$. В результате точка пересечения хорды с $y=0$ является искомым корнем уравнения. Если условие остановы не удовлетворено $a-b<0$, алгоритм повторяется на интервале $(a,c)$. 
+Итерационная фомула имеет вид:
+\begin{equation}
+x_{i+1}=x_{i-1}-\frac{f(x_{i-1})(x_i-x_{i-1})}{f(x_i)-f(x_{i-1})}
+\end{equation}
+
+
+Графическое представления метода метода хорд представлено на Fig.~\ref{fig:chords}.
+
+\begin{figure}[h]
+\setcaptionmargin{5mm}
+\onelinecaptionstrue
+\includegraphics[width=0.5\textwidth]{pics/chords.png}
+\captionstyle{normal}\caption{Метод хорд}\label{fig:chords}
+\end{figure}
+
+\subsection{Метод Ньютона}
+Данный метод отличается от вышеописанных тем, что он требует вычисления как функции $f(x)$, так и производной $f^{'}(x)$ в произвольных точках $x$, принадлежащих интервалу $(a,b )$. Этот метод основан на разложении в ряд Тейлора в окрестности точки $x$:
+\begin{equation}
+f(x+\delta) \approx f(x)+f^{'}(x)\delta+\frac{f^{''}(x)}{2}\delta^2+ ...
+\end{equation}
+
+Для малых $\delta$ справедливо $\delta=-\frac{f(x)}{f^{'}(x)}$.
+Таким образом, итерационная фомула имеет вид:
+\begin{equation}
+x_{n+1}=x_n-\frac{f(x_n)}{f^{'}(x_n)}
+\end{equation}
+
+Графическое представления метода метода Ньютона представлено на Fig.~\ref{fig:newton}.
+\begin{figure}[h]
+\setcaptionmargin{5mm}
+\onelinecaptionstrue
+\includegraphics[width=0.4\textwidth]{pics/newton.png}
+\captionstyle{normal}\caption{Метод Ньютона}\label{fig:newton}
+\end{figure}
+
+\subsection{Метод Брента}
+Метод Брента является модифицированным методом Деккера, который, в свою очередь, является объединением метода деления пополам с методом секущих.
+Сперва рассмотрим метод Деккера. Для каждой итерации метода рассматривается система
+\begin{equation}
+s=\begin{cases}
+b_k - \frac{b_k-b_{k-1}}{f(b_k)-f(b_{k-1})}f(b_k), \text{ if $f(b_k) \neq f(b_{k-1})$}.\\
+m = \frac{a_k+b_k}{2} \text{ otherwise}.\\
+\end{cases}
+\end{equation}
+Подразумевается, что на интервале $(a,b)$ функция $f(x)$ имеет корень. Таким образом, на каждой итерации метода Деккера происходит выбор способа уточнения корня функции - при помощи метода деления пополам или же при помощи метода секущих. Слабая сторона метода Деккера - низкая скорость сходимости при малом $b_k-b_{k-1}$. 
+
+Брент предложил проводить дополнительную проверку $b_k-b_{k-1} > \delta$ для выбора метода уточнения корня, что позволяет повысить скорость сходимости метода. Кроме этого, линейная интерполяция в методе секущих была заменена обратной квадратичной интерполяций, реккурентное соотношение которой можно представить в виде
+\begin{equation}
+x_{n+1}=\frac{f_{n-1}f_n}{(f_{n-2}-f_{n-1})(f_{n-2}-f_n)}x_{n-2}+ \\\frac{f_{n-2}f_n}{(f_{n-1}-f_{n-2})(f_{n-1}-f_n)}x_{n-1}+\frac{f_{n-2}f_{n-1}}{(f_{n}-f_{n-2})(f_{n}-f_{n-1})}x_{n}.
+\end{equation}
+
+В данной формуле $f_n=f(x_n)$.
 
 \section{Numerical experiments}
 
@@ -169,7 +240,7 @@ The supercomputer MVS-10P OP, located at the JSCC RAS, was used during the resea
 \begin{thebibliography}{99}
 
 \bibitem{Wright}
-\refitem{articel}
+\refitem{article}
 W.~W.~Wright, P.~Struck, T.~Bartkus, G.~Addy, {\it ``Recent Advances in the LIWICE Icing Model''}, SAE Technical Paper (2015).
 
 \bibitem{Bourgault}
@@ -179,6 +250,19 @@ Y.~Bourgault, H. Beaugendre, W. G. Habashi, {\it ``Development of a Shallow-Wate
 \bibitem{Beaugendre}
 \refitem{misc}
 H.~Beaugendre, {\it ``A PDE-Based Approach to In-Flight Ice Accretion''}, A thesis of the degree of Doctor of Philosophy, Department of Mechanical Engineering, McGill University, Montreal, Qu\'ebec (2003).
+
+\bibitem{Dekker}
+\refitem{article}
+Brent, R.P.. Finding a zero by means of successive linear interpolation. : London, 1969.
+
+\bibitem{Brent}
+\refitem{book}
+Brent, R.P.. Algorithms for minimization without derivatives. : Prentice-Hall, 1973.
+
+\bibitem{Press}
+\refitem{book}
+William H. Press, Saul A. Teukolsky, William T. Vetterling, and Brian P. Flannery. 2007. Numerical Recipes 3rd Edition: The Art of Scientific Computing (3rd. ed.). Cambridge University Press, USA.
+
 
 \end{thebibliography}
 
