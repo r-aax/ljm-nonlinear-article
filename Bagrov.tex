@@ -41,7 +41,7 @@ escapeinside={\%*}{*)}
 \titlerunning{solving nonlinear equations}
 \authorrunning{Bagrov, Rybakov}
 
-\title{Selection of a Method for Solving Nonlinear Equations in Shallow-Water Icing Model Implementation}
+\title{Selection of a method for solving nonlinear equations in shallow-water icing model implementation}
 
 \author{\firstname{A.~D.}~\surname{Bagrov}}
 \email[E-mail: ]{andrey.bagrov@yandex.ru}
@@ -60,12 +60,12 @@ escapeinside={\%*}{*)}
 Моделирование ледяных наростов на профилях летательных аппаратов в процессе их полета в среде, содержащей переохлажденные капли воды, является крайней важной задачей для безопасности полетов, так как образуемые ледяные наросты существенным образом влияют на летные характеристики.
 В одной из моделей решения поставленной задачи -- shallow-water icing model (SWIM) -- центральную роль в численном моделировании занимает задача решения нелинейных уравнений с одной переменной.
 Так как данная задача занимает подавляюще большую часть всех расчетов, то вопрос выбора оптимального метода решения нелинейных уравнений и оптимизации данных методов встает особенно остро.
-В данной статье описан анализ использования различных методов решения нелинейных уравнений в реализации решателя SWIM с учетом особенностей решаемых уравнений и продемонстрировано существенное ускорение расчетных кодов при выполнении вычислений на суперкомпьютерах МСЦ РАН.
+В данной статье описан анализ использования различных методов решения нелинейных уравнений в реализации решателя SWIM с учетом особенностей решаемых уравнений, что привело к существенному ускорению расчетных кодов при выполнении вычислений на суперкомпьютерах МСЦ РАН.
 \end{abstract}
 
 \subclass{65H05, 65Y20} % Enter 2010 Mathematics Subject Classification.
 
-\keywords{nonlinear equations, shallow-water icing model, метод бисекций, метод ньютона, метод брента, TODO}
+\keywords{nonlinear equations, shallow-water icing model, bisections method, Newton's method, Brent's method}
 
 \maketitle
 
@@ -114,7 +114,7 @@ h_f \tilde{T} \ge 0\\
 \setcaptionmargin{5mm}
 \onelinecaptionstrue
 \includegraphics[width=0.7\textwidth]{pics/surface.pdf}
-\captionstyle{normal}\caption{Пространство решение системы уравнений массового и теплового баланса ячейки.}\label{fig:surface}
+\captionstyle{normal}\caption{Пространство решений системы уравнений массового и теплового баланса ячейки.}\label{fig:surface}
 \end{figure}
 
 Несмотря на то, что неизвестных в уравнении больше, чем самих уравнений, система все равно решается, так как данные переменные не являются полностью независимыми.
