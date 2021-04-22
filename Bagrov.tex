@@ -162,13 +162,6 @@ h_f \tilde{T} \ge 0\\
 	
 Для достижения заданной точности $\epsilon$ необходимо провести $\log_2\frac{\epsilon_0}{\epsilon}$  операций, где $\epsilon_0$ – длина начального интервала $(a, b)$, на котором находится корень; $(a, b)$ - требуемая точность. Метод бисекции гарантированно найдет корень, если он существует. Если корней несколько, метод найдет один из корней.
 
-\begin{figure}[h]
-\setcaptionmargin{5mm}
-\onelinecaptionstrue
-\includegraphics[width=0.5\textwidth]{pics/bisect.png}
-\captionstyle{normal}\caption{Метод деления пополам (метод бисекции)}\label{fig:dq_rime_wet}
-\end{figure}
-
 \subsection{Метод хорд}
 Метод хорд заключается в представлении функции $f(x)$ на отрезке $(a, b)$ хордой, соединяющей концы интервала $(a,b)$. В результате точка пересечения хорды с $y=0$ является искомым корнем уравнения. Если условие остановы не удовлетворено $a-b<0$, алгоритм повторяется на интервале $(a,c)$. 
 Итерационная фомула имеет вид:
@@ -176,14 +169,13 @@ h_f \tilde{T} \ge 0\\
 x_{i+1}=x_{i-1}-\frac{f(x_{i-1})(x_i-x_{i-1})}{f(x_i)-f(x_{i-1})}
 \end{equation}
 
-
 Графическое представления метода метода хорд представлено на Fig.~\ref{fig:chords}.
 
 \begin{figure}[h]
 \setcaptionmargin{5mm}
 \onelinecaptionstrue
-\includegraphics[width=0.5\textwidth]{pics/chords.png}
-\captionstyle{normal}\caption{Метод хорд}\label{fig:chords}
+\includegraphics[width=1.0\textwidth]{pics/chords-newton.pdf}
+\captionstyle{normal}\caption{Иллюстрация работы метода хорд и метода Ньютона}\label{fig:chords-newton}
 \end{figure}
 
 \subsection{Метод Ньютона}
@@ -200,13 +192,6 @@ x_{n+1}=x_n-\frac{f(x_n)}{f^{'}(x_n)}
 
 Графическое представления метода метода Ньютона представлено на Fig.~\ref{fig:newton}.
 \newpage
-
-\begin{figure}[ht!]
-\setcaptionmargin{5mm}
-\onelinecaptionstrue
-\includegraphics[width=0.4\textwidth]{pics/newton.png}
-\captionstyle{normal}\caption{Метод Ньютона}\label{fig:newton}
-\end{figure}
 
 \subsection{Метод Брента}
 Метод Брента является модифицированным методом Деккера, который, в свою очередь, является объединением метода деления пополам с методом секущих.
