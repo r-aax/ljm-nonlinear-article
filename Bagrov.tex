@@ -128,80 +128,80 @@ The general solution space is shown in Fig.~\ref{fig:surface}.
 
 \section{Features of the equations being solved}
 
-Для состояния ячейки glaze ice система уравнений, состоящая из уравнения массового баланса и уравнения теплового баланса, вырождается в простую систему линейных уравнений с двумя неизвестными (высота водяной пленки и высота ледяного нароста).
-Решение такой системы уравнений не представляет сложностей.
-Для двух оставшихся состояний ячейки (running wet, rime ice) описанная система уравнений сводится к одному нелинейному уравнению с одной переменной (неизвестной в данном случае является температура ячейки).
-При этом в нелинейное уравнение входят такие физические величины как удельная теплоемкость воды, льда и воздуха ($C_w$, $C_{ice}$, $C_a$), скрытое тепло испарения и сублимации ($L_{ev}$, $L_su$), а также динамическая вязкость воды ($\mu_w$).
-Данные величины не являются константами, а сами зависят от температуры нелинейным образом.
-На Fig.~\ref{fig:ph_graphics_h} показана кусочно-линейная интерполяция данных физических величин, выполненная по их табличным значениям.
+For glaze ice state of the cell the system of equations consisting of the mass balance equation and the heat balance equation degenerates into a simple system of linear equations with two unknown variables (the height of the water film and the height of the ice).
+The solution of such a system of equations is not difficult.
+For the two remaining states of the cell (running wet, rime ice), the described system of equations is reduced to one nonlinear equation with one variable (the unknown variable in this case is the cell temperature).
+In this case, the nonlinear equation includes such physical essences as the specific heat of water, ice and air ($C_w$, $C_{ice}$, $C_a$), the latent heat of evaporation and sublimation ($L_{ev}$, $L_su$), as well as the dynamic viscosity of water ($\mu_w$).
+These values are not constants, but they themselves depend on temperature in a nonlinear manner.
+Fig.~\ref{fig:ph_graphics_h} shows piecewise-linear interpolation of these physical essences, performed according to their tabular values.
 
 \begin{figure}[h]
 \setcaptionmargin{5mm}
 \onelinecaptionstrue
 \includegraphics[width=1.0\textwidth]{pics/ph_graphics_h.pdf}
-\captionstyle{normal}\caption{Зависимости физических величин от температуры.}\label{fig:ph_graphics_h}
+\captionstyle{normal}\caption{Dependences of physical values on temperature.}\label{fig:ph_graphics_h}
 \end{figure}
 
-В процессе выполнения расчетов в масштабах всей поверхности были использованы неструктурированные расчетные сетки с характерным числом ячеек $10^5$, характерное время счета составляет $10^3$ секунд, характерный шаг по времени $10^{-3}$ секунды.
-В общем случае на каждом шаге по времени требуется решать нелинейное уравнение от 0 до 2 раз (будем считать, что в среднем 1 раз).
-Итого, получаем, что характерное количество запусков решения нелинейного уравнения в процессе запуска типовой расчетной задачи составляет $10^11$ штук.
-Такое количество запусков решения нелинейных уравнений является существенных даже при условии распараллеливания вычислений с помощью MPI, OpenMP и применения векторизации программного кода.
-Поэтому выбор оптимального метода решения нелинейных уравнений является критически важной задачей для повышения быстродействия программного кода.
+In the process of performing calculations on a scale of the entire surface, unstructured computational meshes with a characteristic number of cells $10^5 $ were used, the characteristic computation time is $10^3$ seconds, and the characteristic time step is $10^{-3}$ seconds.
+In the general case, at each time step, it is required to solve the nonlinear equation from 0 to 2 times (we will assume that, on average, 1 time).
+In total, we find that the typical number of launches of solving a nonlinear equation in the process of starting a typical computational problem is $10^11$ calls.
+This number of launches of solving nonlinear equations is essential even if computations are parallelized using MPI, OpenMP, and vectorization of the program code.
+Therefore, the choice of the optimal method for solving nonlinear equations is a critical task for increasing the speed of the program code.
 
-При тестировании различных методов решения нелинейных уравнений были собраны профили функций ($f(x)$), для которых требуется найти решение.
-Многообразие данных профилей продемонстрировано на Fig.~\ref{fig:dq}.
-На этой иллюстрации построены графики семейства функций $f(x)$ для взятых случайным образом ячеек расчетной сетки для случайных моментов времени и для разрешения различных состояний ячеек.
+When testing various methods for solving nonlinear equations, the profiles of the functions ($f(x)$) were collected, for which it is required to find a solution.
+The variety of these profiles is shown in Fig.~\ref{fig:dq}.
+This illustration plots the family of functions $f(x)$ for randomly selected cells of the computational mesh for random times and for resolving various states of the cells.
 
 \begin{figure}[h]
 \setcaptionmargin{5mm}
 \onelinecaptionstrue
 \includegraphics[width=1.0\textwidth]{pics/dq.pdf}
-\captionstyle{normal}\caption{Графики функций, представляющих решаемые нелинейные уравнения.}\label{fig:dq}
+\captionstyle{normal}\caption{Graphs of functions representing nonlinear equations to be solved.}\label{fig:dq}
 \end{figure}
 
-Из приведенной иллюстрации может создаться впечатление, что в основном уравнения решались для состояний ячейки running wet (так как область построения графиков $x > 0$ плотно заполнена графиками).
-Однако это впечатление ошибочно, просто большинство графиков функций $f(x)$ для состояния ячейки rime ice при данном масштабе сильно прижаты с оси $OX$ и сливаются в один график.
-На Fig.~\ref{fig:dq_rime_wet} приведены графики функций для разрешения состояний ячеек rime ice (слева) и running wet (справа) раздельно и в разным масштабах.
-На данных графиках можно наблюдать общий вид графиков, представляющих уравнения для разрешения данных двух состояний ячейки.
+From the given illustration, one might get the impression that the equations were mainly solved for the states of the cell running wet (since the plotting area $x > 0$ is densely filled with plots).
+However, this impression is erroneous, just most of the graphs of the $f(x)$ functions for the state of the rime ice cell at a given scale are strongly pressed from the $OX$ axis and merge into one graph.
+Fig.~\ref{fig:dq_rime_wet} shows graphs of functions for resolving the states of cells rime ice (left) and running wet (right) separately and on different scales.
+In these graphs, you can observe the general view of the graphs representing the equations for resolving these two states of the cell.
 
 \begin{figure}[h]
 \setcaptionmargin{5mm}
 \onelinecaptionstrue
 \includegraphics[width=1.0\textwidth]{pics/dq_rime_wet.pdf}
-\captionstyle{normal}\caption{Семейсва графиков функций решения нелинейных уравнений при определения состояния ячеек rime ice (слева) и running wet (справа).}\label{fig:dq_rime_wet}
+\captionstyle{normal}\caption{A family of graphs of functions for solving nonlinear equations when determining the state of cells rime ice (left) and running wet (right).}\label{fig:dq_rime_wet}
 \end{figure}
 
 \section{Methods of solving nonlinear equations}
 
-Итак, мы рассматриваем решение нелинейного уравнения вида $f(x) = 0$, полученного из системы уравнений массового и теплового баланса для разрешения одного из состояний ячейки.
-При выборе оптимального метода решения нелинейных уравнения для поставленной задачи использовались следующие методы: метод бисекций, метод хорд, метод Ньютона, метод Брента.
-Уравнения решались в температурном интервале $x \in [-100, 200]$, для решаемых уравнений было выполнено условие $f(a) f(b) < 0$.
+So, we consider the solution of a nonlinear equation of the form $f(x) = 0$, obtained from a system of equations of mass and heat balance to resolve one of the states of the cell.
+When choosing the optimal method for solving nonlinear equations for the problem posed, the following methods were used: bisection method, chord method, Newton's method, Brent's method.
+The equations were solved in the temperature range $x \in [-100, 200]$, the condition $f(a)f(b) < 0$ was satisfied for the equations being solved.
 
-Метод бисекций рассматривался в качестве эталона для сравнения с другими методами, так как ясно, что он является наиболее медленным, зато гарантированно сходится при любых начальных условиях и любом виде анализируемой функции.
-В процессе решения нелинейного уравнения методом бисекции интервал поиска на каждой итерации решения делится на два равные интервала, из которых выбирается один, для которого продолжает выполняться условие разнознаковости функции на концах интервала.
+The bisection method was considered as a reference for comparison with other methods, since it is clear that it is the slowest, but it is guaranteed to work correctly under any initial conditions and any form of the analyzed function.
+In the process of solving a nonlinear equation by the bisection method, the search interval at each iteration of the solution is divided into two intervals with the same length, from which one is selected, for which the condition of the function with different signs at the ends of the interval continues to be satisfied.
 
-Метод хорд сход по смыслу с методом бисекций, однако на каждой итерации решения уравнения интервал поиска корня делится не на две равные части.
-Точкой деления интервала поиска на два новых интервала определяется как пересечение оси $OX$ c отрезком $[(a, f(a)), (b, f(b))]$.
-Данный метод в большинстве случаев приводит к более быстрому решению уравнения, однако возможны профили функций, для которых применение метода хорд может привести к катастрофическому замедлению процесса поиска корня.
+The chords method is similar in meaning to the bisection method, however, at each iteration of the equation solution, the root search interval is not divided into two equal parts.
+The point of dividing the search interval into two new intervals is defined as the intersection of the $OX$ axis with the geometrical segment $[(a, f (a)), (b, f (b))]$.
+This method in most cases leads to a faster solution of the equation, however, profiles of functions for which the use of the chords method can lead to a catastrophic slowdown in the process of finding the root are possible.
 
-На Fig.~\ref{fig:chords-newton} представлены схемы поиска корней нелинейного уравнения с помощью методов хорд и метода Ньютона.
+Fig.~\ref{fig:chords-newton} shows schemes for finding the roots of a nonlinear equation using the chords methods and Newton's method.
 
 \begin{figure}[h]
 \setcaptionmargin{5mm}
 \onelinecaptionstrue
 \includegraphics[width=1.0\textwidth]{pics/chords-newton.pdf}
-\captionstyle{normal}\caption{Схемы поиска корня нелинейного уравнения методом хорд и методом Ньютона.}\label{fig:chords-newton}
+\captionstyle{normal}\caption{Schemes for finding the root of a nonlinear equation by the chords method and Newton's method.}\label{fig:chords-newton}
 \end{figure}
 
-В методе Ньютона корень уравнения ищется начиная с некоторой точки (на Fig.~\ref{fig:chords-newton} начинаем с точки $b$).
-Из данной точки проводится касательная до пересечения с осью $OX$ (что соответствует вычислению разностной производной с требуемым порядком точности) в некоторой точке $x_i$, которая и становится новым значением - кандидатом на корень уравнения.
-Данный метод крайне эффективен для поиска корней уравнений, представленных, например, выпуклыми функциями, однако существуют профили функций, для которых метод Ньютона неприменим или может работать крайне медленно.
+In Newton's method, the root of the equation is searched for starting from some point (in Fig.~\ref{fig:chords-newton} we start from point $b$).
+A tangent line is drawn from this point to the intersection with the $OX$ axis (which corresponds to the calculation of the difference derivative with the required order of accuracy) at some point $x_i$, which becomes a new value - a candidate for the root of the equation.
+This method is extremely effective for finding the roots of equations, represented, for example, by convex functions, but there are profiles of functions for which Newton's method is inapplicable or can be extremely slow.
 
-Метод Брента является модифицированным методом Деккера, который, в свою очередь, является объединением метода деления пополам с методом секущих.
-В методе Деккера на каждой итерации происходит попытка применить метод хорд для сужения интервала поиска корня, а при невозможности применения метода хорд выполняется применение одной итерации метода бисекции.
-В методе Брента осуществляется похожий синтез метода хорд и метода бисекций.
-В этом методе также выполняется попытка применения метода хорд, а при снижении скорости стягивания интервала поиска корня применяются разовые итерации метода бисекций.
-Кроме этого, линейная интерполяция в методе хорд заменена обратной квадратичной интерполяций.
+Brent's method is a modified Decker's method, which, in turn, is a combination of the bisection method with the chords method.
+In Decker's method, at each iteration, an attempt is made to apply the chords method step to narrow the interval for finding the root, and if the chords method cannot be applied, we use one iteration of bisection method.
+In the Brent's method, a similar synthesis of the chords method and the bisection method is carried out.
+This method also attempts to apply the chords method, and when the rate of contraction of the interval for root searching decreases, one iteration of the bisection method are used.
+In addition, linear interpolation in the chords method has been replaced by inverse quadratic interpolation.
 
 \section{Numerical experiments}
 
@@ -209,19 +209,19 @@ The general solution space is shown in Fig.~\ref{fig:surface}.
 \setcaptionmargin{5mm}
 \onelinecaptionstrue
 \includegraphics[width=1\textwidth]{pics/stat.pdf}
-\captionstyle{normal}\caption{Статистика количеств вызово функции $f(x)$ и итераций решения нелинейного уравнения}\label{fig:stat}
+\captionstyle{normal}\caption{Statistics of the quantities of calls to the function $f(x)$ and iterations of solving a nonlinear equation.}\label{fig:stat}
 \end{figure}
 
-Для анализа использования различных методов решения нелинейных уравнений по запуску на расчетных типовых задачах, решаемых при различных температурах свободного потока была собрана статистика по количеству итераций решения уравнений и общему количеству вызовов функций $f(x)$, необходимых для решения данных уравнений.
-На Fig.~\ref{fig:stat} представлена сводная статистика.
-В Table~\ref{tab:stat} собраны данные по среднему количеству итераций и вызовов функций при использовании всех описанных методов решения уравнений.
+To analyze the use of various methods for solving nonlinear equations for launching on typical computational problems solved at different temperatures of the free stream, statistics were collected on the number of iterations of solving the equations and the total number of calls to functions $f(x)$ required to solve these equations.
+Fig.~\ref{fig:stat} provides summary statistics.
+Table~\ref{tab:stat} contains data on the average number of iterations and function calls when using all the described methods for solving equations.
 
 \begin{table}[h!]
 \label{tbl:supercomputers}
 \setcaptionmargin{0mm}
 \onelinecaptionsfalse
 \captionstyle{flushleft}
-\caption{Статистика применения различных методов решения нелинейных уравнений.}\label{tab:stat}
+\caption{Statistics on the application of various methods for solving nonlinear equations.}\label{tab:stat}
 \bigskip
 \begin{tabular}{|c|c|c|}
 \hline
@@ -239,19 +239,18 @@ Brent's & 5,5 & 4,5 \\
 \label{tab:supercomputers}
 \end{table}
 
-Стоит отметить, что общее количество вызовов функции $f(x)$ в ходе решения уравнений является наиболее важной характеристикой с точки зрения эффективности метода решения нелинейного уравнения, так как на это тратится вычислительное время.
-Исходя из данных, представленных на Fig.~\ref{fig:stat} и Table~\ref{tab:stat}, можно увидеть, что метод Ньютона требует для решения рассматриваемых нелинейных уравнений в среднем всего 3,3 итерации.
-Однако с точки зрения производительности метод Брента в процессе своей работы выполняет почти в два раза меньше вызовов функции $f(x)$, что приводит к практически двукратному ускорению скорости расчетов относительно метода хорд и метода Ньютона.
+It should be noted that the total number of calls to the function $f(x)$ during the solution of equations is the most important characteristic from the point of view of the efficiency of the method for solving a nonlinear equation, since it takes computational time.
+Based on the data presented in Fig.~\ref{fig:stat} and Table~\ref{tab:stat}, we can see that Newton's method requires, on average, only 3.3 iterations to solve the considered nonlinear equations.
+However, from the point of view of performance, the Brent method in the course of its work performs almost twice as few calls to the function $f(x)$, which leads to an almost twofold acceleration of the calculation speed relative to the chords method and Newton's method.
 
 \section{Conclusion}
 
-В работе была рассмотрена постановка задачи расчета физических процессов в рамках shallow-water icing model.
-Ядром работы данного решателя является решение нелинейного уравнения с одной неизвестной.
-Решение данной задачи занимает подавляюще большую часть всех вычислений решателя, поэтому выбор оптимального метода решения нелинейного уравнения крайне важен.
-В процессе выполнения исследований были собраны профили функций, для которых требуется решать нелинейные уравнений и на собранных данных проанализированы следующие методы: метод бисекций, метод хорд, метод Ньютона и метод Брента.
-С точки зрения среднего количества итераций поиска корня уравнения наиболее выгодным оказался метод Ньютона.
-Однако, общее количество вызовов функции $f(x)$ оказалось в среднем ниже при использовании метода Брента, что обуславливает оптимальность данного метода для применения в решателе shallow-water icing model.
-
+The work considered the formulation of the problem of calculating physical processes in the impelemtation of the shallow-water icing model.
+The core of this solver is the solution of a nonlinear equation with one unknown variable.
+The solution of this problem takes up the overwhelming majority of all calculations of the solver, therefore, the choice of the optimal method for solving a nonlinear equation is extremely important.
+In the process of performing the research, profiles of functions were collected for which it is required to solve nonlinear equations and the following methods were analyzed on the collected data: bisection method, chords method, Newton's method and Brent's method.
+From the point of view of the average number of iterations for finding the root of the equation, Newton's method turned out to be the most advantageous.
+However, the total number of calls to the $f(x)$ function turned out to be lower on average when using the Brent method, which makes this method optimal for use in the shallow-water icing model solver.
 \begin{acknowledgments}
 The work has been done at the JSCC RAS as part of the state assignment for the topic 0580-2021-0016.
 The supercomputer MVS-10P OP, located at the JSCC RAS, was used during the research.
