@@ -72,9 +72,9 @@ This article describes the analysis of the use of various methods for solving no
 \section{Introduction}
 
 At present, there are a lot of computational codes used for numerical simulation of icing on a streamlined body surface.
-Some of the most popular packages for this task are FENSAP-ICE \cite{Bourgault}, Lewice \cite{Wright} and ONERA.
+Some of the most popular packages for this task are FENSAP-ICE \cite{Bourgault}, LEWICE \cite{Wright}, OpenFOAM \cite{Beld}, AIPAC \cite{Domingos}, ONERA, TRAJICE and others \cite{Myers}.
 In this article, we will not discuss the features of these calculation packages and the differences between them, but consider only the implementation of the SWIM solver, described in detail in \cite{Bourgault}.
-When performing computer simulation of the icing process of a surface in a free stream, the shallow-water icing model performs a simultaneous calculation of the ice accretion and the flow of a liquid film over the surface of the streamlined body. This takes into account the loss of moisture on the surface of the body, evaporation of water or sublimation of ice from the surface of the body, the flow of a liquid film over the surface with its partial freezing, as well as the overflow of heat fluxes between the body and the surface and between the surface and the surrounding air.
+When performing computer simulation of the icing process of a surface in a free stream, the shallow-water icing model performs a simultaneous calculation of the ice accretion and the flow of a liquid film over the surface of the streamlined body \cite{Farzaneh}. This takes into account the loss of moisture on the surface of the body, evaporation of water or sublimation of ice from the surface of the body, the flow of a liquid film over the surface with its partial freezing, as well as the overflow of heat fluxes between the body and the surface and between the surface and the surrounding air.
 
 Numerical calculations are performed on a surface computational mesh, consisting of individual cells, while in each cell of the surface, the mass conservation law must be fulfilled, written in the following form:
 
@@ -94,7 +94,7 @@ In addition, the law of conservation of energy is fulfilled in each cell:
 \end{aligned}
 \end{equation}
 
-In this formula, $C_w$ is the specific heat of water, $\tilde{T}$ is the cell temperature in degrees Celsius, $\tilde{T}_{d,\infty}$ is the temperature of the inpingement droplets in degrees Celsius, $\overline{u}_d$ is the speed of droplets falling onto the surface, $L_{evap}$ is the latent heat of water evaporation, $L_{subl}$ is the latent heat of ice sublimation, $L_{fusion}$ is the latent the heat of ice melting, $C_{ice}$ is the heat capacity of ice, $\sigma$ is the Boltzmann constant, $T_{\infty}$ is the free stream temperature in kelvin, $T$ is the cell temperature in kelvin, $\dot Q_h$ is the specific value of the heat flux received from the air, $\dot Q_{cond}$ is the specific value of the heat flux entering the cell from the surface.
+In this formula, $C_w$ is the specific heat of water, $\tilde{T}$ is the cell temperature in degrees Celsius, $\tilde{T}_{d,\infty}$ is the temperature of the inpingement droplets in degrees Celsius, $\overline{u}_d$ is the speed of droplets falling onto the surface, $L_{evap}$ is the latent heat of water evaporation, $L_{subl}$ is the latent heat of ice sublimation, $L_{fusion}$ is the latent the heat of ice melting, $C_{ice}$ is the heat capacity of ice, $\sigma$ is the Boltzmann constant, $T_{\infty}$ is the free stream temperature in kelvin, $T$ is the cell temperature in kelvin, $\dot Q_h$ is the specific value of the heat flux received from the air, $\dot Q_{cond}$ is the specific value of the heat flux entering the cell from the surface \cite{Dong}.
 
 For the numerical solution of the given system of equations, it is necessary to discretize it in time and space, as shown in \cite{Beaugendre}.
 After that, we obtain a system of two difference equations, which include three unknown variables: surface temperature $\tilde{T}$, height of water film $h_f$ and height of ice $h_{ice}$.
@@ -118,7 +118,7 @@ h_f \tilde{T} \ge 0\\
 \end{figure}
 
 Despite the fact that there are more unknowns in the equation than the equations themselves, the system is still solved, since these variables are not completely independent.
-The solution is taken from the condition that the cell can be in one of three states.
+The solution is taken from the condition that the cell can be in one of three states \cite{Ozgen}.
 The first state is running wet, it is reached when there is no ice in the cell and a liquid film flows.
 In this case, the temperature cannot be negative.
 The second state is glaze icing, if both ice and water are present in the cell at the same time.
@@ -145,7 +145,7 @@ Fig.~\ref{fig:ph_graphics_h} shows piecewise-linear interpolation of these physi
 In the process of performing calculations on a scale of the entire surface, unstructured computational meshes with a characteristic number of cells $10^5 $ were used, the characteristic computation time is $10^3$ seconds, and the characteristic time step is $10^{-3}$ seconds.
 In the general case, at each time step, it is required to solve the nonlinear equation from 0 to 2 times (we will assume that, on average, 1 time).
 In total, we find that the typical number of launches of solving a nonlinear equation in the process of starting a typical computational problem is $10^11$ calls.
-This number of launches of solving nonlinear equations is essential even if computations are parallelized using MPI, OpenMP, and vectorization of the program code.
+This number of launches of solving nonlinear equations is essential even if computations are parallelized using MPI \cite{Kalantzis}, OpenMP, and vectorization of the program code \cite{Savin}.
 Therefore, the choice of the optimal method for solving nonlinear equations is a critical task for increasing the speed of the program code.
 
 When testing various methods for solving nonlinear equations, the profiles of the functions ($f(x)$) were collected, for which it is required to find a solution.
@@ -174,7 +174,7 @@ In these graphs, you can observe the general view of the graphs representing the
 \section{Methods of solving nonlinear equations}
 
 So, we consider the solution of a nonlinear equation of the form $f(x) = 0$, obtained from a system of equations of mass and heat balance to resolve one of the states of the cell.
-When choosing the optimal method for solving nonlinear equations for the problem posed, the following methods were used: bisection method, chord method, Newton's method, Brent's method.
+When choosing the optimal method for solving nonlinear equations for the problem posed, the following methods were used: bisection method, chord method, Newton's method, Brent's method \cite{Press}.
 The equations were solved in the temperature range $x \in [-100, 200]$, the condition $f(a)f(b) < 0$ was satisfied for the equations being solved.
 
 The bisection method was considered as a reference for comparison with other methods, since it is clear that it is the slowest, but it is guaranteed to work correctly under any initial conditions and any form of the analyzed function.
@@ -213,6 +213,7 @@ In addition, linear interpolation in the chords method has been replaced by inve
 \end{figure}
 
 To analyze the use of various methods for solving nonlinear equations for launching on typical computational problems solved at different temperatures of the free stream, statistics were collected on the number of iterations of solving the equations and the total number of calls to functions $f(x)$ required to solve these equations.
+Statistics were collected using supercomputers of the JSCC RAS~\cite{JSCC_Supercomputers}.
 Fig.~\ref{fig:stat} provides summary statistics.
 Table~\ref{tab:stat} contains data on the average number of iterations and function calls when using all the described methods for solving equations.
 
@@ -266,9 +267,49 @@ Y.~Bourgault, H.~Beaugendre, and W.~Habashi, \textquotedblleft Development of a 
 \refitem{article}
 W.~Wright, P.~Struck, T.~Bartkus, and G.~Addy, \textquotedblleft Recent advances in the LEWICE icing model,\textquotedblright \ SAE Technical Paper (2015).
 
+\bibitem{Beld}
+\refitem{misc}
+E.~Beld, \textquotedblleft Droplet impingement and film layer modeling as a basis for aircraft icing simulations in OpenFOAM,\textquotedblright \ Internship report, engineering fluid dynamics department, Universiteit Twente (2013).
+
+\bibitem{Domingos}
+\refitem{article}
+R.~Domingos and S.~Silva, \textquotedblleft 3D computational methodology for bleed air ice protection system parametric analysis,\textquotedblright \ SAE International technical paper (2015).
+
+\bibitem{Myers}
+\refitem{article}
+T.~Myers, \textquotedblleft Extension to the Messinger model for aircraft icing,\textquotedblright \ AIAA Journal, vol. \textbf{39}, no. 2, 211--218 (2001).
+
+\bibitem{Farzaneh}
+\refitem{articel}
+P.~Farzaneh, G.~Bouchard, \textquotedblleft Modeling a water flow on an icing surface,\textquotedblright \ IWAIS XI, Montr\'eal (2005).
+
+\bibitem{Dong}
+\refitem{article}
+W.~Dong, J.~Zhu, X.~Min, \textquotedblleft Calculation of the heat transfer and temperature on the aircraft anti-icing surface,\textquotedblleft \ $27^{th}$ International Congress of the Aeronautical Sciences (2010).
+
 \bibitem{Beaugendre}
 \refitem{misc}
-H.~Beaugendre, \textquotedblleft A PDE-based approach to in-flight ice accretion,\textquotedblright \ A thesis of the degree of doctor of philosophy, Department of Mechanical Engineering, McGill University, Montreal, Qu\'ebec (2003).
+H.~Beaugendre, \textquotedblleft A PDE-based approach to in-flight ice accretion,\textquotedblright \ A thesis of the degree of doctor of philosophy, department of mechanical engineering, McGill University, Montreal, Qu\'ebec (2003).
+
+\bibitem{Ozgen}
+\refitem{article}
+S.~\"Ozgen and M.~Canibek, \textquotedblleft Ice accretion simulation on multi-element airfoils using extended Messinger model,\textquotedblright \ Heat Mass Transfer, \textbf{45}, 305--322 (2009).
+
+\bibitem{Kalantzis}
+\refitem{article}
+V.~Kalantzis, \textquotedblleft Data analytics, accelerators, and supercomputing: the challenges and future of MPI,\textquotedblright \ XRDS {\bf 23}, 50--52 (2017).
+
+\bibitem{Savin}
+\refitem{article}
+G.~Savin, B.~Shabanov, A.~Rybakov, and S.~Shumilin, \textquotedblleft Vectorization of flat loops of arbitrary structure using instructions AVX-512,\textquotedblright \ Lobachevskii J Math {\bf 41}, 2566--2574 (2020).
+
+\bibitem{Press}
+\refitem{book}
+W.~Press, S.~Teukolsky, W.~Vetterling, and B.~Flannery, \emph{Numerical recipes, The art of scientific computing} (Cambridge University Press, 2007).
+
+\bibitem{JSCC_Supercomputers}
+\refitem{misc}
+JSCC RAS Supercomputing resources. \url{http://www.jscc.ru/supercomputing-resources/}. Accessed 2021.
 
 \end{thebibliography}
 
