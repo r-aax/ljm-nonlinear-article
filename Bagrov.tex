@@ -65,26 +65,26 @@ This article describes the analysis of the use of various methods for solving no
 
 \subclass{65H05, 65Y20} % Enter 2010 Mathematics Subject Classification.
 
-\keywords{nonlinear equations, shallow-water icing model, bisections method, Newton's method, Brent's method}
+\keywords{nonlinear equations, shallow-water icing model, bisection method, Newton's method, Brent's method}
 
 \maketitle
 
 \section{Introduction}
 
-В настоящее время известно множество расчетных кодов, использующихся для численного моделирования обледенения поверхности обтекаемого тела.
-Одними из наиболее популярных пакетов для решения данной задачи являются Lewice \cite{Wright} и ONERA.
-В данной статье мы не будем касаться особенностей данных расчетных пакетов и различий между ними, а рассмотрим только реализацию решателя SWIM, подробно описанного в \cite{Bourgault}.
-При выполнении компьютерного моделировании процесса обледенения поверхности, обтекаемой свободным потоком, в shallow-water icing model выполняется одновременный расчет нарастания льда и течения пленки жидкости по поверхности обтекаемого тела. При этом учитывается выпадение влаги на поверхность тела, испарение влаги или сублимация льда с поверхности тела, течение жидкой пленки по поверхности с частичным ее замерзанием, а также перетекание потоков тепла между телом и поверхностью и между поверхностью и окружающим воздухом.
+At present, there are a lot of computational codes used for numerical simulation of icing on a streamlined body surface.
+Some of the most popular packages for this task are Lewice \cite{Wright} and ONERA.
+In this article, we will not discuss the features of these calculation packages and the differences between them, but consider only the implementation of the SWIM solver, described in detail in \cite{Bourgault}.
+When performing computer simulation of the icing process of a surface in a free stream, the shallow-water icing model performs a simultaneous calculation of the ice accretion and the flow of a liquid film over the surface of the streamlined body. This takes into account the loss of moisture on the surface of the body, evaporation of water or sublimation of ice from the surface of the body, the flow of a liquid film over the surface with its partial freezing, as well as the overflow of heat fluxes between the body and the surface and between the surface and the surrounding air.
 
-Численные расчеты выполняются на поверхностной расчетной сетке, состоящей из отдельных ячеек, при этом в каждой ячейке поверхности должен выполняться закон сохранения массы, записываемый в следующем виде:
+Numerical calculations are performed on a surface computational mesh, consisting of individual cells, while in each cell of the surface, the mass conservation law must be fulfilled, written in the following form:
 
 \begin{equation}
 \rho_w \left[ \frac{\partial h_f}{\partial t} + \operatorname{div}(\overline{u} h_f) \right] = U_{\infty} LWC \beta - \dot m_{evap} - \dot m_{ice}
 \end{equation}
 
-В данной формуле $\rho_w$ -- плотность воды, $h_f$ -- высота водяной пленки на поверхности, $\overline{u}$ -- скорость течения водяной пленки, $U_{\infty}$ -- скорость набегания свободного потока, $LWC$ -- содержание влаги в набегающем потоке, $\dot m_{evap}$ -- удельная скорость испарения или сублимации с поверхности обтекаемого тела, $\dot m_{ice}$ -- удельная скорость нарастания массы льда.
+In this formula, $\rho_w$ is the density of water, $h_f$ is the height of the water film on the surface, $\overline{u}$ is the velocity of the water film, $U_{\infty}$ is the speed of the free stream, $LWC$ is the liquid water content in the free stream, $\dot m_{evap}$ is the specific rate of evaporation or sublimation from the surface of the streamlined body, $\dot m_{ice}$ is the specific rate of ice mass increasing.
 
-Кроме того, в каждой ячейке выполняется закон сохранения энергии:
+In addition, the law of conservation of energy is fulfilled in each cell:
 
 \begin{equation}
 \begin{aligned}
@@ -94,12 +94,12 @@ This article describes the analysis of the use of various methods for solving no
 \end{aligned}
 \end{equation}
 
-В данной формуле $C_w$ -- удельная теплоемкость воды, $\tilde{T}$ -- температура ячейки в градусах Цельсия, $\tilde{T}_{d,\infty}$ -- температура выпадающей влаги в градусах Цельсия, $\overline{u}_d$ -- скорость выпадающих на поверхность капель, $L_{evap}$ - скрытая теплота испарения воды, $L_{subl}$ -- скрытая теплота сублимации льда, $L_{fusion}$ -- скрытая теплота плавления льда, $C_{ice}$ -- теплоемкость льда, $\sigma$ -- постоянная Больцмана, $T_{\infty}$ -- температура свободного потока в кельвинах, $T$ - температура ячейки в кельвинах, $\dot Q_h$ -- удельная величина потока тепла, получаемого из воздуха, $\dot Q_{cond}$ -- удельная величина потока тепла, поступающего в ячейку из обтекаемого тела.
+In this formula, $C_w$ is the specific heat of water, $\tilde{T}$ is the cell temperature in degrees Celsius, $\tilde{T}_{d,\infty}$ is the temperature of the inpingement droplets in degrees Celsius, $\overline{u}_d$ is the speed of droplets falling onto the surface, $L_{evap}$ is the latent heat of water evaporation, $L_{subl}$ is the latent heat of ice sublimation, $L_{fusion}$ is the latent the heat of ice melting, $C_{ice}$ is the heat capacity of ice, $\sigma$ is the Boltzmann constant, $T_{\infty}$ is the free stream temperature in kelvin, $T$ is the cell temperature in kelvin, $\dot Q_h$ is the specific value of the heat flux received from the air, $\dot Q_{cond}$ is the specific value of the heat flux entering the cell from the surface.
 
-Для численного решения приведенной системы уравнений необходимо выполнить ее дискретизацию по времени и пространстрву, как это показано в \cite{Beaugendre}.
-После этого получим систему из двух разностных уравнений, в которые входят три неизвестные величины: температура поверхности $\tilde{T}$, высота водяной пленки $h_f$ и высота ледяного нароста $h_{ice}$.  
+For the numerical solution of the given system of equations, it is necessary to discretize it in time and space, as shown in \cite{Beaugendre}.
+After that, we obtain a system of two difference equations, which include three unknown variables: surface temperature $\tilde{T}$, height of water film $h_f$ and height of ice $h_{ice}$.
 
-Также при решении системы уравнений должны выполняться условия совместимости, записываемые в виде
+Also, when solving the system of equations, the compatibility conditions must be satisfied, written in the form
 
 \begin{equation}
 \begin{cases}
@@ -114,17 +114,17 @@ h_f \tilde{T} \ge 0\\
 \setcaptionmargin{5mm}
 \onelinecaptionstrue
 \includegraphics[width=0.7\textwidth]{pics/surface.pdf}
-\captionstyle{normal}\caption{Пространство решений системы уравнений массового и теплового баланса ячейки.}\label{fig:surface}
+\captionstyle{normal}\caption{The space of solutions of the system of equations for the mass and heat balance of the cell.}\label{fig:surface}
 \end{figure}
 
-Несмотря на то, что неизвестных в уравнении больше, чем самих уравнений, система все равно решается, так как данные переменные не являются полностью независимыми.
-Решение ищется из условия того, что ячейка может находиться в одном из трех состояний.
-Первое состояние -- running wet -- достигается когда в ячейке полностью отсутствует лед и течет жидкая пленка.
-В этом случае температура не может быть отрицательной.
-Второе состояние -- glaze icing -- если в ячейке одновременно присутствует и лед, и вода.
-В этом случае температура равна нулю градусам по Цельсию.
-И наконец, в третьем случае при отрицательной температуре в ячейке не может находиться вода и присутствует только лед.
-Общее пространство решений показано на Fig.~\ref{fig:surface}.
+Despite the fact that there are more unknowns in the equation than the equations themselves, the system is still solved, since these variables are not completely independent.
+The solution is taken from the condition that the cell can be in one of three states.
+The first state is running wet, it is reached when there is no ice in the cell and a liquid film flows.
+In this case, the temperature cannot be negative.
+The second state is glaze icing, if both ice and water are present in the cell at the same time.
+In this case, the temperature is zero degrees Celsius.
+And finally, in the third case, at a negative temperature, the cell cannot contain water and only ice is present.
+The general solution space is shown in Fig.~\ref{fig:surface}.
 
 \section{Features of the equations being solved}
 
