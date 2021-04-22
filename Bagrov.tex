@@ -72,7 +72,7 @@ This article describes the analysis of the use of various methods for solving no
 \section{Introduction}
 
 At present, there are a lot of computational codes used for numerical simulation of icing on a streamlined body surface.
-Some of the most popular packages for this task are Lewice \cite{Wright} and ONERA.
+Some of the most popular packages for this task are FENSAP-ICE \cite{Bourgault}, Lewice \cite{Wright} and ONERA.
 In this article, we will not discuss the features of these calculation packages and the differences between them, but consider only the implementation of the SWIM solver, described in detail in \cite{Bourgault}.
 When performing computer simulation of the icing process of a surface in a free stream, the shallow-water icing model performs a simultaneous calculation of the ice accretion and the flow of a liquid film over the surface of the streamlined body. This takes into account the loss of moisture on the surface of the body, evaporation of water or sublimation of ice from the surface of the body, the flow of a liquid film over the surface with its partial freezing, as well as the overflow of heat fluxes between the body and the surface and between the surface and the surrounding air.
 
@@ -258,30 +258,17 @@ The supercomputer MVS-10P OP, located at the JSCC RAS, was used during the resea
 
 \begin{thebibliography}{99}
 
-\bibitem{Wright}
-\refitem{article}
-W.~W.~Wright, P.~Struck, T.~Bartkus, G.~Addy, {\it ``Recent Advances in the LIWICE Icing Model''}, SAE Technical Paper (2015).
-
 \bibitem{Bourgault}
 \refitem{article}
-Y.~Bourgault, H. Beaugendre, W. G. Habashi, {\it ``Development of a Shallow-Water Icing Model in FENSAP-ICE''}, Journal of Aircraft, Vol. 37, No. 4, 640--646 (2000).
+Y.~Bourgault, H.~Beaugendre, and W.~Habashi, \textquotedblleft Development of a shallow-water icing model in FENSAP-ICE,\textquotedblright \ Journal of Aircraft, vol. \textbf{37}, no. 4, 640--646 (2000).
+
+\bibitem{Wright}
+\refitem{article}
+W.~Wright, P.~Struck, T.~Bartkus, and G.~Addy, \textquotedblleft Recent advances in the LEWICE icing model,\textquotedblright \ SAE Technical Paper (2015).
 
 \bibitem{Beaugendre}
 \refitem{misc}
-H.~Beaugendre, {\it ``A PDE-Based Approach to In-Flight Ice Accretion''}, A thesis of the degree of Doctor of Philosophy, Department of Mechanical Engineering, McGill University, Montreal, Qu\'ebec (2003).
-
-\bibitem{Dekker}
-\refitem{article}
-Brent, R.P.. Finding a zero by means of successive linear interpolation. : London, 1969.
-
-\bibitem{Brent}
-\refitem{book}
-Brent, R.P.. Algorithms for minimization without derivatives. : Prentice-Hall, 1973.
-
-\bibitem{Press}
-\refitem{book}
-William H. Press, Saul A. Teukolsky, William T. Vetterling, and Brian P. Flannery. 2007. Numerical Recipes 3rd Edition: The Art of Scientific Computing (3rd. ed.). Cambridge University Press, USA.
-
+H.~Beaugendre, \textquotedblleft A PDE-based approach to in-flight ice accretion,\textquotedblright \ A thesis of the degree of doctor of philosophy, Department of Mechanical Engineering, McGill University, Montreal, Qu\'ebec (2003).
 
 \end{thebibliography}
 
